@@ -1,0 +1,87 @@
+import mongoose from 'mongoose';
+
+const technicalQuestionSchema = new mongoose.Schema({
+    question: {
+        type: String,
+        required: true
+    },
+    intention:{
+        type: String,
+        required: true
+    },
+    answer: {
+        type: String,
+        required: true
+    }
+},{_id: false});
+const behavioralQuestionSchema = new mongoose.Schema({
+    question: {
+        type: String,
+        required: true
+    },
+    intention:{
+        type: String,
+        required: true
+    },
+    answer: {
+        type: String,
+        required: true
+    }
+},{_id: false});
+
+const skillsGapSchema = new mongoose.Schema({
+    skill: {
+        type: String,
+        required: true
+    },
+    gapDescription: {
+        type: String,
+        required: true
+    },severity:{
+        type: String,
+        enum: ['Low', 'Medium', 'High'],
+        required: true
+    }
+},{_id: false});
+
+const prepareTionSchema = new mongoose.Schema({
+    day: {
+        type: Number,
+        required: true
+    },
+    focus: {
+        type: String,
+        required: true
+    },
+    task:{
+        type: String,
+        required: true
+    }
+},{_id: false});
+
+const interViewReportSchema = new mongoose.Schema({
+    jobDescription: {
+        type: String,
+        required: true
+    },
+    resume: {
+        type: String,
+        // required: true
+    },selfDescription: {
+        type: String,
+        // required: true 
+    },matchPercentage: {
+        type: Number,
+        min: 0,
+        max: 100,
+        required: true
+    },
+    technicalQuestions: [technicalQuestionSchema],
+    behavioralQuestions: [behavioralQuestionSchema],
+    skillsGapAnalysis: [skillsGapSchema],
+    preparationPlan: [prepareTionSchema]
+}, { timestamps: true });
+
+const InterViewReport = mongoose.model('InterViewReport', interViewReportSchema);
+
+export default InterViewReport;

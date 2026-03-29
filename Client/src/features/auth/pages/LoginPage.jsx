@@ -1,4 +1,7 @@
 import React, { useState } from "react";
+import { useAuth } from "../hooks/AuthHook";
+import { useNavigate } from "react-router-dom";
+import LoadingPage from "../components/LoadingPage";
 
 const LoginPage = () => {
   const [currState, setCurrState] = useState("Sign up");
@@ -7,19 +10,36 @@ const LoginPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [fullname, setFullname] = useState("");
-  const [bio, setBio] = useState("");
+  // const [bio, setBio] = useState("");
 
-  const onSubmit = (e) => {
+   const { handleLogin, handleRegister ,loading } = useAuth();
+   const navigate = useNavigate();
+
+  const onSubmit = async(e) => {
     e.preventDefault();
 
-    if (currState === "Sign up" && step === 1) {
-      setStep(2);
-      return;
-    }
+    // if (currState === "Sign up" && step === 1) {
+    //   setStep(2);
+    //   return;
+    // }
 
-    const data = { email, password, fullname, bio };
+    const data = { email, password, fullname };
     console.log(data);
+     
+    if(currState==="Sign up"){
+        await handleRegister({ name: fullname, email, password });
+    }else{
+      await handleLogin({ email, password });
+    }
+    setFullname("");
+    setEmail("");
+    setPassword("");
+      navigate("/");
   };
+
+  if(loading){
+    return <LoadingPage/>;
+  }
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-black via-gray-900 to-gray-950 text-white">
@@ -45,7 +65,8 @@ const LoginPage = () => {
 
         <form onSubmit={onSubmit} className="flex flex-col">
 
-          {currState === "Sign up" && step === 1 && (
+          {/* {currState === "Sign up" && step === 1 && ( */}
+              {currState === "Sign up" && (
             <input
               type="text"
               placeholder="Full Name"
@@ -56,7 +77,7 @@ const LoginPage = () => {
             />
           )}
 
-          {step === 1 && (
+          {/* {step === 1 && ( */}
             <>
               <input
                 type="email"
@@ -76,16 +97,16 @@ const LoginPage = () => {
                 required
               />
             </>
-          )}
+          {/* )} */}
 
-          {currState === "Sign up" && step === 2 && (
+          {/* {currState === "Sign up" && step === 2 && (
             <textarea
               placeholder="Tell us about yourself"
               className="input h-28 resize-none"
               value={bio}
               onChange={(e) => setBio(e.target.value)}
             />
-          )}
+          )} */}
 
           <button
             type="submit"
